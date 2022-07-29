@@ -1,0 +1,12 @@
+{
+    "events": [
+        {
+            "id": 1,
+            "name": "click-event",
+            "description": "when the user clicks the button the event should be triggered",
+            "type": "app",
+            "priority": 0,
+            "related-events": [ "show-button-event", "redirect-event" ]
+        }
+    ]
+}
