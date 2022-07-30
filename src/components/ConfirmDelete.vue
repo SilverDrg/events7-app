@@ -56,7 +56,7 @@ const deleteEvent = async function() {
         selectedEvents.deleteEvents()
     }
 
-    open = false
+    open.value = false
 }
 
 </script>
