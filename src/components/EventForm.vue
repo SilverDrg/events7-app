@@ -105,10 +105,10 @@ onMounted(() => {
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                relatedEventsOptions.push(doc.data().name)
+                if(!relatedEventsOptions.some(event => event === doc.data().name)){
+                    relatedEventsOptions.push(doc.data().name)
+                }
             })
-            relatedEventsOptions = [ ...new Set(relatedEventsOptions) ]
-            console.log(relatedEventsOptions)
         });
 })
 
@@ -132,6 +132,7 @@ const NewEvent = async function() {
                     relatedEvents: form.relatedEvents
                 }
                 eventList.addEvent(event)
+                resetForm()
             })
             .catch((err) => {
                 console.log(err)
@@ -146,7 +147,19 @@ const NewEvent = async function() {
                 relatedEvents: form.relatedEvents
             })
         eventList.updateEvent(form)
+        resetForm()
     }
+
+    open.value = false
+}
+
+const resetForm = function() {
+    form.id = null
+    form.name = ''
+    form.description = ''
+    form.type = ''
+    form.priority = null
+    form.relatedEvents = []
 }
 
 </script>
