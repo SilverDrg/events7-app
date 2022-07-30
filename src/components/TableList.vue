@@ -5,10 +5,10 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                     <th scope="col" class="p-4">
-                        <div class="flex items-center">
+                        <!-- <div class="flex items-center">
                             <input @change="selectedEvents.logEvents" id="checkbox-all" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
                             <label for="checkbox-all" class="sr-only">checkbox</label>
-                        </div>
+                        </div> -->
                     </th>
                     <th scope="col" class="py-3 px-6">
                         Id
@@ -16,9 +16,9 @@
                     <th scope="col" class="py-3 px-6">
                         Name
                     </th>
-                    <th scope="col" class="py-3 px-6">
+                    <!-- <th scope="col" class="py-3 px-6">
                         Description
-                    </th>
+                    </th> -->
                     <th scope="col" class="py-3 px-6">
                         Type
                     </th>
@@ -41,27 +41,27 @@
                             <label for="checkbox-table-1" class="sr-only">checkbox</label>
                         </div>
                     </td>
-                    <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                    <th scope="row" class="py-3.5 px-6 font-medium text-gray-900 whitespace-nowrap">
                         {{ event.id }}
                     </th>
-                    <td class="py-4 px-6">
+                    <td class="py-3.5 px-6">
                         {{ event.name }}
                     </td>
-                    <td class="py-4 px-6">
+                    <!-- <td class="py-4 px-6">
                         {{ event.description }}
-                    </td>
-                    <td class="py-4 px-6">
+                    </td> -->
+                    <td class="py-3.5 px-6">
                         {{ event.type }}
                     </td>
-                    <td class="py-4 px-6">
+                    <td class="py-3.5 px-6">
                         {{ event.priority }}
                     </td>
-                    <td class="py-4 px-6">
+                    <td class="py-3.5 px-6">
                         <kbd v-for="relatedEvent in event.relatedEvents" :key="relatedEvent" class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">
                             {{ relatedEvent }}
                         </kbd>
                     </td>
-                    <td class="py-4 px-6">
+                    <td class="py-3.5 px-6">
                         <div class="inline-flex space-x-2">
                             <ViewEvent :event="event">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -80,26 +80,36 @@
                 </tr>
             </tbody>
         </table>
+        <div class="flex flex-wrap justify-center max-w-7xl mx-auto mb-3 space-x-2">
+            <button @click="previousPage" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-2.5 py-2.5 text-center" type="button">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <span class="sr-only">Previous page</span>
+            </button>
+            <button v-if="eventList.getListLength() == 10" @click="nextPage" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-2.5 py-2.5 text-center" type="button">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                <span class="sr-only">Next page</span>
+            </button>
+        </div>
     </div>
 </div>
 </template>
 
 <script setup>
-import { onBeforeMount } from 'vue'
-import EventForm from './EventForm.vue'
-import ViewEvent from './ViewEvent.vue'
-import ConfirmDelete from './ConfirmDelete.vue'
+import { onBeforeMount, defineAsyncComponent } from 'vue'
 import { selectedEvents } from '../states/selectedEvents.js'
 import { eventList } from '../states/eventList.js'
 import db from "../db"
+const EventForm = defineAsyncComponent(() => import('./EventForm.vue'))
+const ViewEvent = defineAsyncComponent(() => import('./ViewEvent.vue'))
+const ConfirmDelete = defineAsyncComponent(() => import('./ConfirmDelete.vue'))
 
 onBeforeMount(() => {
     db.collection("events")
         .orderBy("name")
+        .limit(10)
         .get()
         .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    console.log(doc.id)
+            querySnapshot.forEach((doc) => {
                 const data = {
                     id: doc.id,
                     name: doc.data().name,
@@ -112,5 +122,51 @@ onBeforeMount(() => {
             });
         });
 })
+
+const nextPage = function() {
+    db.collection("events")
+        .orderBy("name")
+        .startAt(eventList.getLastEvent().name)
+        .limit(10)
+        .get()
+        .then((querySnapshot) => {
+            eventList.addPreviousStart(eventList.getFirstEvent())
+            eventList.clearEventList()
+            querySnapshot.forEach((doc) => {
+                const data = {
+                    id: doc.id,
+                    name: doc.data().name,
+                    description: doc.data().description,
+                    type: doc.data().type,
+                    priority: doc.data().priority,
+                    relatedEvents: doc.data().relatedEvents
+                };
+                eventList.addEvent(data)
+            });
+        });
+}
+
+const previousPage = function() {
+    db.collection("events")
+        .orderBy("name")
+        .startAt(eventList.getPreviousStart().name)
+        .limit(10)
+        .get()
+        .then((querySnapshot) => {
+            eventList.removeLastStart()
+            eventList.clearEventList()
+            querySnapshot.forEach((doc) => {
+                const data = {
+                    id: doc.id,
+                    name: doc.data().name,
+                    description: doc.data().description,
+                    type: doc.data().type,
+                    priority: doc.data().priority,
+                    relatedEvents: doc.data().relatedEvents
+                };
+                eventList.addEvent(data)
+            });
+        });
+}
 
 </script>

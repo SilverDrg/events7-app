@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, defineAsyncComponent } from 'vue';
 import { eventList } from './eventList.js'
 import db from '../db'
 

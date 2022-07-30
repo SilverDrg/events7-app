@@ -68,11 +68,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { defineAsyncComponent, ref, onMounted } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import Multiselect from '@vueform/multiselect'
 import { eventList } from '../states/eventList.js'
 import db from "../db"
+const Multiselect = defineAsyncComponent(() => import('@vueform/multiselect'))
 
 const open = ref(false)
 let relatedEventsOptions = []
