@@ -40,5 +40,8 @@ export const eventList = reactive({
     },
     removeLastStart() {
         this.previousStart.splice(this.previousStart.length - 1, 1);
+    },
+    getPreviousStartListLength() {
+        return this.previousStart.length
     }
 });
