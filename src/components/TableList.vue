@@ -5,10 +5,6 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                     <th scope="col" class="p-4">
-                        <!-- <div class="flex items-center">
-                            <input @change="selectedEvents.logEvents" id="checkbox-all" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
-                            <label for="checkbox-all" class="sr-only">checkbox</label>
-                        </div> -->
                     </th>
                     <th scope="col" class="py-3 px-6">
                         Id
@@ -85,7 +81,7 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 <span class="sr-only">Previous page</span>
             </button>
-            <button v-if="eventList.getListLength() == 10" @click="nextPage" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-2.5 py-2.5 text-center" type="button">
+            <button v-if="eventList.getListLength() >= 10" @click="nextPage" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-2.5 py-2.5 text-center" type="button">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 <span class="sr-only">Next page</span>
             </button>

@@ -57,6 +57,9 @@ const deleteEvent = async function() {
     }
 
     open.value = false
+    setTimeout(function() {
+        window.location.reload();
+    }, 500)
 }
 
 </script>
