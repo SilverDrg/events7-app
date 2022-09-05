@@ -9,7 +9,7 @@
   "dependencies": {
     "@vueform/multiselect": "^2.5.2",
     "firebase": "^9.9.1",
-    "vue": "^3.2.37",
+    "vue": "^3.2.38",
     "vue-router": "^4.1.2"
   },
   "devDependencies": {
